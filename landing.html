@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Sneakers - Lusanda Sneaker Shop</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+      background: #f0f0f0;
+    }
+    h2 {
+      text-align: center;
+    }
+    .product {
+      border: 1px solid #ddd;
+      padding: 10px;
+      margin: 10px;
+      display: inline-block;
+      width: 220px;
+      background: white;
+      border-radius: 10px;
+      vertical-align: top;
+    }
+    .product img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      border-radius: 6px;
+    }
+    .product h4 {
+      margin: 5px 0;
+    }
+    .product p {
+      margin: 3px 0;
+    }
+    button {
+      padding: 8px;
+      background: #28a745;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    a {
+      display: block;
+      margin: 20px 0;
+      text-align: center;
+      font-weight: bold;
+      color: #007bff;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <h2>Lusanda Sneaker Shop</h2>
+  <a href="basket.html">Go to Basket</a>
+  <div id="products"></div>
+
+  <script>
+    let basket = JSON.parse(localStorage.getItem("basket")) || [];
+    let products = JSON.parse(localStorage.getItem("lusanda_products")) || [];
+
+    const displayArea = document.getElementById("products");
+
+    // Render admin-added products
+    products.forEach((p, i) => {
+      const div = document.createElement("div");
+      div.className = "product";
+      div.innerHTML = `
+        <img src="${p.img}" />
+        <h4>${p.name}</h4>
+        <p>Color: ${p.color}</p>
+        <p>Size: ${p.size}</p>
+        <p>Price: R${p.price}</p>
+        <p>Status: ${p.quantity > 0 ? p.quantity + " left" : "Sold Out"}</p>
+        ${p.quantity > 0 ? `<button onclick="add(${i}, true)">Add to Basket</button>` : ""}
+      `;
+      displayArea.appendChild(div);
+    });
+
+    // Render folder images (1.jpg to 10.jpg)
+    for (let i = 1; i <= 10; i++) {
+      const div = document.createElement("div");
+      const imagePath = `images/${i}.jpg`;
+
+      // Random sample data for folder sneakers
+      const name = `Sneaker ${i}`;
+      const price = (i * 100) + 299;
+      const color = ["Red", "Blue", "Black", "White", "Green"][i % 5];
+      const size = [5, 6, 7, 8, 9, 10][i % 6];
+      const sneaker = { img: imagePath, name, price, color, size };
+
+      div.className = "product";
+      div.innerHTML = `
+        <img src="${imagePath}" />
+        <h4>${name}</h4>
+        <p>Color: ${color}</p>
+        <p>Size: ${size}</p>
+        <p>Price: R${price}</p>
+        <p>Status: Available</p>
+        <button onclick='addFromFolder(${JSON.stringify(sneaker)})'>Add to Basket</button>
+      `;
+      displayArea.appendChild(div);
+    }
+
+    // Add admin-added product
+    function add(index, isAdmin = false) {
+      const p = isAdmin ? products[index] : {};
+      basket.push(p);
+      localStorage.setItem("basket", JSON.stringify(basket));
+      alert("Added to basket!");
+    }
+
+    // Add folder sneaker
+    function addFromFolder(item) {
+      basket.push(item);
+      localStorage.setItem("basket", JSON.stringify(basket));
+      alert("Added to basket!");
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Basket - Lusanda Sneaker Shop</title>
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    .item { border-bottom: 1px solid #ddd; padding: 10px; }
+    img { height: 100px; }
+    button { margin-top: 10px; padding: 10px; background: orange; border: none; color: white; border-radius: 5px; }
+  </style>
+</head>
+<body>
+  <h2>Your Basket</h2>
+  <div id="basket"></div>
+  <button onclick="checkout()">Checkout</button>
+
+  <script>
+    const basket = JSON.parse(localStorage.getItem("basket")) || [];
+    const container = document.getElementById("basket");
+
+    basket.forEach(item => {
+      const div = document.createElement("div");
+      div.className = "item";
+      div.innerHTML = `
+        <img src="${item.img}" />
+        <p>${item.name} - R${item.price}</p>
+        <p>Color: ${item.color}, Size: ${item.size}</p>
+      `;
+      container.appendChild(div);
+    });
+
+    function checkout() {
+      const data = {
+        to: "ohadebe79@gmail.com",
+        subject: "Lusanda Sneaker Shop Order",
+        body: JSON.stringify(basket, null, 2)
+      };
+      alert("Sending basket to email...");
+      fetch("https://formsubmit.co/ajax/ohadebe79@gmail.com", {
+        method: "POST",
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      }).then(res => alert("Order sent!")).catch(err => alert("Failed."));
+    }
+  </script>
+</body>
+</html>

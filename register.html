@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Register - Lusanda Sneaker Shop</title>
+  <style>
+    body { font-family: Arial; padding: 20px; background: #f5f5f5; }
+    form { max-width: 400px; margin: auto; background: white; padding: 20px; border-radius: 10px; }
+    input { width: 100%; margin: 10px 0; padding: 10px; border-radius: 5px; }
+    button { background: #333; color: white; padding: 10px; border: none; width: 100%; border-radius: 5px; }
+  </style>
+</head>
+<body>
+  <h2>Register to Lusanda Sneaker Shop</h2>
+  <form onsubmit="registerUser(event)">
+    <input type="text" placeholder="Name" id="name" required />
+    <input type="email" placeholder="Email" id="email" required />
+    <input type="tel" placeholder="Phone Number" id="phone" required />
+    <input type="password" placeholder="Password" id="password" required />
+    <input type="password" placeholder="Confirm Password" id="confirm" required />
+    <button type="submit">Register</button>
+  </form>
+
+  <script>
+    function registerUser(e) {
+      e.preventDefault();
+      const name = document.getElementById("name").value;
+      const email = document.getElementById("email").value;
+      const phone = document.getElementById("phone").value;
+      const pass = document.getElementById("password").value;
+      const confirm = document.getElementById("confirm").value;
+
+      if (pass !== confirm) {
+        alert("Passwords do not match.");
+        return;
+      }
+
+      localStorage.setItem("lusanda_user", JSON.stringify({ name, email, phone, pass }));
+      alert("Registered successfully!");
+      window.location.href = "login.html";
+    }
+  </script>
+</body>
+</html>

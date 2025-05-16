@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin - Lusanda Sneaker Shop</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    input, button { margin: 10px 0; padding: 8px; width: 100%; }
+    .sneaker { border: 1px solid #ccc; padding: 10px; margin: 10px 0; }
+  </style>
+</head>
+<body>
+  <h2>Admin Panel</h2>
+  <input type="file" accept="image/*" id="image" />
+  <input type="text" id="name" placeholder="Sneaker Name" />
+  <input type="text" id="color" placeholder="Color" />
+  <input type="text" id="size" placeholder="Size" />
+  <input type="number" id="price" placeholder="Price" />
+  <input type="number" id="quantity" placeholder="Quantity" />
+  <button onclick="addSneaker()">Add Sneaker</button>
+  <hr>
+  <h3>All Sneakers</h3>
+  <div id="list"></div>
+
+  <script>
+    let products = JSON.parse(localStorage.getItem("lusanda_products")) || [];
+
+    function addSneaker() {
+      const file = document.getElementById("image").files[0];
+      if (!file) return alert("Please select an image");
+
+      const reader = new FileReader();
+      reader.onload = function () {
+        const sneaker = {
+          img: reader.result,
+          name: document.getElementById("name").value,
+          color: document.getElementById("color").value,
+          size: document.getElementById("size").value,
+          price: document.getElementById("price").value,
+          quantity: parseInt(document.getElementById("quantity").value)
+        };
+        products.push(sneaker);
+        localStorage.setItem("lusanda_products", JSON.stringify(products));
+        loadSneakers();
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function loadSneakers() {
+      document.getElementById("list").innerHTML = "";
+      products.forEach((s, i) => {
+        const div = document.createElement("div");
+        div.className = "sneaker";
+        div.innerHTML = `
+          <img src="${s.img}" width="100"><br>
+          ${s.name} - R${s.price} - ${s.color} - Size: ${s.size} - Qty: ${s.quantity}
+          <button onclick="markSold(${i})">Mark as Sold Out</button>
+        `;
+        document.getElementById("list").appendChild(div);
+      });
+    }
+
+    function markSold(index) {
+      products[index].quantity = 0;
+      localStorage.setItem("lusanda_products", JSON.stringify(products));
+      loadSneakers();
+    }
+
+    loadSneakers();
+  </script>
+</body>
+</html>
